@@ -1,0 +1,11 @@
+
+{% block body %}
+
+<html>
+<title>List of Shows</title>
+{% for show in shows %}
+<p><strong> The Series:</strong> {{ show.title }} <strong>is about: </strong>{{show.summary}} <strong>in Genre:</strong> {{show.genre}}</h3>
+{% endfor %}
+</html>
+
+{% endblock %}

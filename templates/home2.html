@@ -1,0 +1,169 @@
+{% extends "layout.html" %}
+{% block content %}
+<body>
+<div class="huge">
+    <h2>Welcome to ShowHound</h2>
+    <h3 class="alt">Find your favorite television episode(s)</h3>
+</div>
+
+<div class="container"></div>
+<script src="static/js/coverflow.js"></script>
+<div id="player"></div>
+
+<script>
+  coverflow('player').setup({
+    flash: 'static/js/coverflow.swf',
+    playlist: 'static/js/playlist.json',
+    backgroundcolor: '#FFeeff',
+    align: 'center',
+    valign: 'top',
+    width: 600,
+    height: 460
+  });
+</script>
+</div>
+
+<form id="searchtitle"> Choose you Show: <input type="text" name="searchshow"> <input type="Submit" value="Submit"></form>
+
+<style type="text/css">
+    #resulttable, #episodetable
+    {
+        display: none;
+    }
+</style>
+
+<table id="resulttable"></table>
+<table id="episodetable"></table>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#searchtitle").submit(function(e)
+        {
+            e.preventDefault();
+
+            var title = $(this).serialize();
+
+            $("#resulttable").empty().hide();
+            $("#episodetable").empty().hide();
+
+            var orderArray = ["Title", "Plot", "Actors", "Year", "Released", "Awards", "Genre", "imdbRating", "Runtime"];
+            var episodeArray = ["Title", "Plot", "Season", "Episode", "Airing"];
+
+            $.ajax({
+                data: title,
+                url: "/api/search/title",
+                success: function(data)
+                {
+                    //console.log(data);
+                    if (data.hasOwnProperty("Error"))
+                    {
+                        alert("Error: "+data["Error"]);
+                        return;
+                    }
+
+                    if (!(data.hasOwnProperty("Title")))
+                    {
+                        alert("Search result doesn't have a title.");
+                        return;
+                    }
+
+                    var tr, tdKey, tdVal;
+
+                    for (var i = 0; i < orderArray.length; i++)
+                    {
+                        v = data[orderArray[i]]
+
+                        tdKey = $("<td />").text(orderArray[i]);
+                        tdVal = $("<td />").text(v);
+                        tr = $("<tr />");
+
+                        tr.append(tdKey);
+                        tr.append(tdVal);
+
+                        $("#resulttable").append(tr);
+                    }
+
+                    tdKey = $("<td />").html("&nbsp;");
+                    tdVal = $("<td />");
+                    form = $("<form />");
+                    form.html('<input type="text" name="keywords" /><input type="submit" value="search keyword" /></form>');
+
+                    tdVal.append(form);
+                    tr = $("<tr />");
+
+                    tr.append(tdKey);
+                    tr.append(tdVal);
+
+                    $("#resulttable").append(tr);
+
+                    form.submit(function(e)
+                    {
+                        e.preventDefault();
+
+                        $("#episodetable").empty().hide();
+                        
+                        kwdata = $(this).serialize();
+                        kwdata += "&imdb_id="+data["imdbID"];
+                        console.log(kwdata);
+                        $.ajax({
+                            url: "/api/search/showkeyword",
+                            data: kwdata,
+                            success: function(searchdata)
+                            {
+                                console.log(searchdata);
+
+                                var tr, tdKey, tdVal;
+                                tr = $("<tr />");
+                                for (var i = 0; i < episodeArray.length; i++)
+                                {
+                                    td = $("<td />").text(episodeArray[i]);
+                                    
+                                    tr.append(td);
+                                    $("#episodetable").append(tr);
+                                }
+
+                                for (var i = 0; i < searchdata.length; i++)
+                                {
+                                    tr = $("<tr />");
+                                    for (var j = 0; j < 4; j++)
+                                    {
+                                        td = $("<td />").text(searchdata[i][episodeArray[j].toLowerCase()]);
+                                        tr.append(td);
+                                    }
+                                    td = $("<td />").attr({"data-ep":"s"+searchdata[i]["season"]+"e"+searchdata[i]["episode"]}).html("&nbsp;");
+                                    tr.append(td);
+                                    $("#episodetable").append(tr);
+                                }
+                                $("#episodetable").show();
+
+                                $.ajax({
+                                    url: "/api/search/listings",
+                                    data: {
+                                        "imdb_id": data["imdbID"]
+                                    },
+                                    success: function(listingdata)
+                                    {
+                                        console.log(listingdata);
+
+                                        for (var i = 0; i < listingdata.length;i++)
+                                        {
+                                            $("td[data-ep=s"+listingdata[i][4]+"e"+listingdata[i][5]+"]").append(listingdata[i][0]+"<br />"+listingdata[i][1]+"<br />"+listingdata[i][2]+"<br /><br />");
+                                        }
+                                    },
+                                    dataType: "json"
+                                });
+                            },
+                            dataType: "json"
+                        });
+                    });
+
+                    $("#resulttable").show();
+                },
+                dataType:"json"
+            });
+        });
+    });
+</script>
+
+</body>
+{% endblock %}

@@ -1,0 +1,49 @@
+[
+	{
+		"title": "Seinfeld",
+		"description": "",
+		"image": "/static/img/seinfeld.jpg",
+		"link": "http://www.tvmaze.com/shows/530/seinfeld",
+		"duration": "183"
+	},
+	{
+		"title": "Friends",
+		"description": "",
+		"image": "/static/img/friends.jpg",
+		"link": "http://www.tvmaze.com/shows/431/friends",
+		"duration": "782"
+	},
+	{
+		"title": "The Big Bang Theory",
+		"description": "",
+		"image": "/static/img/bigbang.jpg",
+		"link": "http://www.tvmaze.com/shows/66/the-big-bang-theory"
+	},
+	{
+		"title": "How I Met Your Mother",
+		"description": "",
+		"image": "/static/img/metmother.jpg",
+		"link": "http://www.tvmaze.com/shows/171/how-i-met-your-mother"
+	},
+	{
+		"title": "2 Broke Girls",
+		"description": "",
+		"image": "/static/img/2broke.jpg",
+		"link": "http://www.tvmaze.com/shows/124/2-broke-girls",
+		"duration": "782"
+	},
+	{
+		"title": "Two and Half Men",
+		"description": "",
+		"image": "/static/img/twoandhalf.jpg",
+		"link": "http://www.tvmaze.com/shows/130/two-and-a-half-men",
+		"duration": "183"
+	},
+	 {
+	 	"title": "The Walking Dead",
+		"description": "",
+		"image": "/static/img/walking.jpg",
+		"link": "http://www.tvmaze.com/shows/73/the-walking-dead",
+		"duration": "183"
+	}
+]

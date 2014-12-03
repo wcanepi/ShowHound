@@ -1,0 +1,15 @@
+
+
+{% block body %}
+<div class="series">
+{% for s in response_dict %}
+
+ <div> <p> ID: {{ s.id }} <br>Name: {{ s.name }} <br>Season: {{ s.season }} <br>Airdate: {{ s.airdate }} <br>Season: {{ s.season }} <br></div></p><br>
+{% endfor %}
+
+</div>
+{% endblock %}
+
+
+//cdnjs.cloudflare.com/ajax/libs/knockout/3.2.0/knockout-min.js
+//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js

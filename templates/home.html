@@ -1,0 +1,207 @@
+{% extends "layout.html" %}
+{% block content %}
+<body>
+<div class="huge">
+ 
+    <h3 class="alt">Find your favorite television episode(s)</h3>
+</div>
+
+<div class="container content-wrap">
+    
+
+<!-- <script language="JavaScript" type="text/javascript" src="static/js/contentflow.js"></script> -->
+
+ <div style="width: 80%; margin: 40px auto;">
+            <div id="contentFlow4" class="ContentFlow">
+            <div class="loadIndicator"><div class="indicator"></div></div>
+    <div class="flow">
+        <div class="item">
+            <img class="content" src="static/img/seinfeld.jpg"/>
+            <div class="caption">Seinfeld<br/><a href="http://www.flickr.com/photos/bonsaikiptb/"></a></div>
+        </div>
+        <div class="item">
+            <img class="content" src="static/img/friends.jpg"/>
+            <div class="caption">Friends<br/><a href="http://www.flickr.com/photos/bonsaikiptb/"></a></div>
+        </div>
+        <div class="item">
+            <img class="content" src="static/img/bigbang.jpg"/>
+            <div class="caption">The Big Ban Theory<br/><a href="http://www.flickr.com/photos/bonsaikiptb/"></a></div>
+        </div>
+        <div class="item">
+            <img class="content" src="static/img/metmother.jpg"/>
+            <div class="caption">How I Met Your Mother<br/><a href="http://www.flickr.com/photos/bonsaikiptb/"></a></div>
+        </div>
+        <div class="item">
+            <img class="content" src="static/img/2broke.jpg"/>
+            <div class="caption">2 Broke Girls<br/><a href="http://www.flickr.com/photos/bonsaikiptb/"></a></div>
+        </div>
+        <div class="item">
+            <img class="content" src="static/img/twoandhalf.jpg"/>
+            <div class="caption">Two and a Half Men<br/><a href="http://www.flickr.com/photos/bonsaikiptb/"></a></div>
+        </div>
+        <div class="item">
+            <img class="content" src="static/img/walking.jpg"/>
+            <div class="caption">The Walking Dead<br/><a href="http://www.flickr.com/photos/bonsaikiptb/"></a></div>
+        </div>
+            <div class="globalCaption"></div>
+            <div class="scrollbar"><div class="slider"><div class="position"></div></div></div>
+    </div>
+</div>
+</div>
+
+<!-- end the main div tag -->
+
+<div align="center"><form id="searchtitle"> Television Series Search: <input type="text" name="searchshow"> <input type="Submit" value="Submit"></form></center>
+
+<style type="text/css">
+    #resulttable, #episodetable
+    {
+        display: none;
+    }
+</style>
+
+<table class="table table-striped" id="resulttable" ></table>
+<table class="table table-striped" id="episodetable"></table>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#searchtitle").submit(function(e)
+        {
+            e.preventDefault();
+
+            var title = $(this).serialize();
+
+            $("#resulttable").empty().hide();
+            $("#episodetable").empty().hide();
+
+            var orderArray = ["Title", "Plot", "Actors", "Year", "Released", "Awards", "Genre", "imdbRating", "Runtime"];
+            var episodeArray = ["Title", "Plot", "Season", "Episode", "Airing"];
+
+            $.ajax({
+                data: title,
+                url: "/api/search/title",
+                success: function(data)
+                {
+                    //console.log(data);
+                    if (data.hasOwnProperty("Error"))
+                    {
+                        alert("Error: "+data["Error"]);
+                        return;
+                    }
+
+                    if (!(data.hasOwnProperty("Title")))
+                    {
+                        alert("Search result doesn't have a title.");
+                        return;
+                    }
+
+                    var tr, tdKey, tdVal;
+
+                    for (var i = 0; i < orderArray.length; i++)
+                    {
+                        v = data[orderArray[i]]
+
+                        tdKey = $("<td />").text(orderArray[i]);
+                        tdVal = $("<td />").text(v);
+                        tr = $("<tr />");
+
+                        tr.append(tdKey);
+                        tr.append(tdVal);
+
+                        $("#resulttable").append(tr);
+                    }
+
+                    tdKey = $("<td />").html("&nbsp;");
+                    tdVal = $("<td />");
+                    form = $("<form>");
+                
+
+                    form.html(
+                        '<div align = "center" class="col-xs-6">'+
+                        '<div class="right-inner-addon">'+
+                        '<i class="icon-search"></i>' +
+                        '<input type="search" class="form-control" placeholder="Search" name="keywords" />' +
+                        '<input type="submit" value="Episode Search" />'+
+                        '</div></div>'
+                        );
+
+                 
+                    tdVal.append(form);
+                    tr = $("<tr />");
+
+                    tr.append(tdKey);
+                    tr.append(tdVal);
+
+                    $("#resulttable").append(tr);
+
+                    form.submit(function(e)
+                    {
+                        e.preventDefault();
+
+                        $("#episodetable").empty().hide();
+                        
+                        kwdata = $(this).serialize();
+                        kwdata += "&imdb_id="+data["imdbID"];
+                        console.log(kwdata);
+                        $.ajax({
+                            url: "/api/search/showkeyword",
+                            data: kwdata,
+                            success: function(searchdata)
+                            {
+                                console.log(searchdata);
+
+                                var tr, tdKey, tdVal;
+                                tr = $("<tr />");
+                                for (var i = 0; i < episodeArray.length; i++)
+                                {
+                                    td = $("<td />").text(episodeArray[i]);
+                                    
+                                    tr.append(td);
+                                    $("#episodetable").append(tr);
+                                }
+
+                                for (var i = 0; i < searchdata.length; i++)
+                                {
+                                    tr = $("<tr />");
+                                    for (var j = 0; j < 4; j++)
+                                    {
+                                        td = $("<td />").text(searchdata[i][episodeArray[j].toLowerCase()]);
+                                        tr.append(td);
+                                    }
+                                    td = $("<td />").attr({"data-ep":"s"+searchdata[i]["season"]+"e"+searchdata[i]["episode"]}).html("&nbsp;");
+                                    tr.append(td);
+                                    $("#episodetable").append(tr);
+                                }
+                                $("#episodetable").show();
+
+                                $.ajax({
+                                    url: "/api/search/listings",
+                                    data: {
+                                        "imdb_id": data["imdbID"]
+                                    },
+                                    success: function(listingdata)
+                                    {
+                                        console.log(listingdata);
+
+                                        for (var i = 0; i < listingdata.length;i++)
+                                        {
+                                            $("td[data-ep=s"+listingdata[i][4]+"e"+listingdata[i][5]+"]").append(listingdata[i][0]+"<br />"+listingdata[i][1]+"<br />"+listingdata[i][2]+"<br /><br />");
+                                        }
+                                    },
+                                    dataType: "json"
+                                });
+                            },
+                            dataType: "json"
+                        });
+                    });
+
+                    $("#resulttable").show();
+                },
+                dataType:"json"
+            });
+        });
+    });
+</script>
+</div>
+</body>
+{% endblock %}

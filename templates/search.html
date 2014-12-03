@@ -1,0 +1,16 @@
+
+
+
+<html>
+{% block body %}
+<h2> Search Shows</h2>
+{% if method="POST" }
+<form action="{{url_for("search")}}" method="POST">
+	<input type ="text" name="query">
+	<input type ="Submit">
+</form>
+else:
+
+</html>
+
+{% endblock %}
