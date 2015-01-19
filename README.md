@@ -3,6 +3,8 @@ ShowHound
 ###Summary
 ShowHound is a search engine that helps you quickly find the next airing of an episode of your favorite, **popular** television program. 
 
+![ShowHound Interface](/images/shound1.png)
+
 ShowHound searches more than 500k movies and television shows (via keyword) to surface details about plots, actors, and episode rating information.
 
 ###Version
@@ -25,19 +27,19 @@ ShowHound uses a number of open source projects to work properly:
 *	AngularJS <br>
 *	Twitter Bootstrap <br>
 *	JavaScript <br>
-* 	HTML/CSS <br>
+* HTML/CSS <br>
 *	jQuery <br>
 *	MySQL <br>
 *	RegEx <br>
-* 	Flask-Login 0.2.11 <br>
-* 	Flash-WTF 0.8 <br>
-* 	Google Maps JS embed API  <br>
-* 	Mapbox API (LeafletJS) <br>
+* Flask-Login 0.2.11 <br>
+* Flash-WTF 0.8 <br>
+* Google Maps JS embed API  <br>
+* Mapbox API (LeafletJS) <br>
 *	OAuth 1.0.1 <br>
-* 	OAuthlib 0.7.2 <br>
-* 	StormPath API <br>
-* 	TVMaze API <br>
-* 	Twilio API
+* OAuthlib 0.7.2 <br>
+* StormPath API <br>
+* TVMaze API <br>
+* Twilio API
 
 
 ### Features
@@ -56,7 +58,7 @@ Customized notifications - future episode airings
 ![ShowHound Interface](/images/shound6.png)
 ![ShowHound Interface](/images/shound5.png)
 ![ShowHound Interface](/images/shound3.png)
-![ShowHound Interface](/images/shound1.png)
+
 
 
 ### Installation
